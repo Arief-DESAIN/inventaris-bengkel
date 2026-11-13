@@ -1,1 +1,868 @@
-<h1>Selamat datang</h1>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peminjaman Barang Bengkel TI</title>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ===== LOGIN ===== */
+        #login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box h1 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.6rem;
+        }
+
+        .login-box p {
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: 0.2s;
+            background: white;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #047857; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-outline {
+            background: white;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover { background: #f8fafc; }
+
+        .error-msg {
+            color: var(--danger);
+            margin-top: 12px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* ===== APP LAYOUT ===== */
+        #app {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: var(--primary);
+            color: white;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .navbar h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* ===== MENU CARDS ===== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(30,64,175,0.15);
+        }
+
+        .menu-card .icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+
+        .menu-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .menu-card p {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* ===== CONTENT SECTIONS ===== */
+        .section {
+            display: none;
+            background: var(--card);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        /* ===== TABLE ===== */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            white-space: nowrap;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-dipinjam {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .badge-dikembalikan {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        /* ===== FORMS ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-card .label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
+
+        .back-btn {
+            margin-bottom: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            .container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== LOGIN PAGE ========== -->
+<div id="login-page">
+    <div class="login-box">
+        <h1>🔧 Bengkel TI</h1>
+        <p>Sistem Peminjaman Barang<br>PLP / Kepala Bengkel</p>
+        
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="admin" value="admin">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="••••••" value="plp123">
+        </div>
+        
+        <button class="btn btn-primary" onclick="login()">Masuk</button>
+        <div class="error-msg" id="login-error">Username atau password salah!</div>
+        
+        <p style="margin-top:20px; font-size:0.85rem; color:#94a3b8;">
+            Default: <b>admin</b> / <b>plp123</b>
+        </p>
+    </div>
+</div>
+
+<!-- ========== MAIN APP ========== -->
+<div id="app">
+    <div class="navbar">
+        <h2>🔧 Aplikasi Peminjaman Barang Bengkel TI</h2>
+        <div class="navbar-right">
+            <span class="user-info" id="user-display">Kepala Bengkel TI / PLP</span>
+            <button class="btn btn-outline" style="padding:8px 14px; font-size:0.9rem;" onclick="logout()">Keluar</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- MENU UTAMA -->
+        <div id="menu" class="section active">
+            <div class="section-header">
+                <h2>Menu Utama</h2>
+            </div>
+            
+            <div class="menu-grid">
+                <div class="menu-card" onclick="showSection('barang')">
+                    <div class="icon">📦</div>
+                    <h3>Daftar Barang</h3>
+                    <p>Lihat stok semua barang</p>
+                </div>
+                <div class="menu-card" onclick="showSection('tambah')">
+                    <div class="icon">➕</div>
+                    <h3>Tambah Barang</h3>
+                    <p>Tambah item baru</p>
+                </div>
+                <div class="menu-card" onclick="showSection('update')">
+                    <div class="icon">🔄</div>
+                    <h3>Update Stok</h3>
+                    <p>Ubah jumlah stok</p>
+                </div>
+                <div class="menu-card" onclick="showSection('pinjam')">
+                    <div class="icon">📤</div>
+                    <h3>Catat Peminjaman</h3>
+                    <p>Pinjamkan barang</p>
+                </div>
+                <div class="menu-card" onclick="showSection('kembali')">
+                    <div class="icon">📥</div>
+                    <h3>Pengembalian</h3>
+                    <p>Kembalikan barang</p>
+                </div>
+                <div class="menu-card" onclick="showSection('aktif')">
+                    <div class="icon">📋</div>
+                    <h3>Peminjaman Aktif</h3>
+                    <p>Barang yang sedang dipinjam</p>
+                </div>
+                <div class="menu-card" onclick="showSection('laporan')">
+                    <div class="icon">📊</div>
+                    <h3>Laporan Ringkas</h3>
+                    <p>Statistik bengkel</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAFTAR BARANG -->
+        <div id="barang" class="section">
+            <button class="btn btn-outline back-btn" onclick="showSection('menu')">← Kembali</button>
+            <div class="section-header">
+                <h2>📦 Daftar Barang</h2>
+            </div>
+            <div class="table-wrapper">
+                <table id="tabel-barang">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Kode</th>
+                            <th>Nama Barang</th>
+                            <th>Stok</th>
+                            <th>Satuan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAMBAH BARANG -->
+        <div id="tambah" class="section">
+            <button class="btn btn-outline back-btn" onclick="showSection('menu')">← Kembali</button>
+            <div class="section-header">
+                <h2>➕ Tambah Barang Baru</h2>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Kode Barang</label>
+                    <input type="text" id="kode" placeholder="BRG008">
+                </div>
+                <div class="form-group">
+                    <label>Nama Barang</label>
+                    <input type="text" id="nama" placeholder="Obeng Plus">
+                </div>
+                <div class="form-group">
+                    <label>Stok Awal</label>
+                    <input type="number" id="stok" placeholder="10" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Satuan</label>
+                    <input type="text" id="satuan" placeholder="buah / set / unit" value="buah">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-success" onclick="tambahBarang()">Simpan Barang</button>
+            </div>
+        </div>
+
+        <!-- UPDATE STOK -->
+        <div id="update" class="section">
+            <button class="btn btn-outline back-btn" onclick="showSection('menu')">← Kembali</button>
+            <div class="section-header">
+                <h2>🔄 Update Stok Barang</h2>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Pilih Barang</label>
+                    <select id="update-id"></select>
+                </div>
+                <div class="form-group">
+                    <label>Stok Baru</label>
+                    <input type="number" id="stok-baru" min="0">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-warning" onclick="updateStok()">Update Stok</button>
+            </div>
+        </div>
+
+        <!-- PINJAM -->
+        <div id="pinjam" class="section">
+            <button class="btn btn-outline back-btn" onclick="showSection('menu')">← Kembali</button>
+            <div class="section-header">
+                <h2>📤 Catat Peminjaman</h2>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Pilih Barang</label>
+                    <select id="pinjam-id"></select>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah</label>
+                    <input type="number" id="jumlah" min="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label>Nama Peminjam</label>
+                    <input type="text" id="nama-peminjam" placeholder="Nama mahasiswa / guru">
+                </div>
+                <div class="form-group">
+                    <label>Keterangan (opsional)</label>
+                    <input type="text" id="keterangan" placeholder="Praktikum Jaringan">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" onclick="pinjamBarang()">Catat Peminjaman</button>
+            </div>
+        </div>
+
+        <!-- PENGEMBALIAN -->
+        <div id="kembali" class="section">
+            <button class="btn btn-outline back-btn" onclick="showSection('menu')">← Kembali</button>
+            <div class="section-header">
+                <h2>📥 Pengembalian Barang</h2>
+            </div>
+            <div class="table-wrapper">
+                <table id="tabel-kembali">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Barang</th>
+                            <th>Peminjam</th>
+                            <th>Jumlah</th>
+                            <th>Tgl Pinjam</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PEMINJAMAN AKTIF -->
+        <div id="aktif" class="section">
+            <button class="btn btn-outline back-btn" onclick="showSection('menu')">← Kembali</button>
+            <div class="section-header">
+                <h2>📋 Peminjaman Aktif</h2>
+            </div>
+            <div class="table-wrapper">
+                <table id="tabel-aktif">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Barang</th>
+                            <th>Peminjam</th>
+                            <th>Jumlah</th>
+                            <th>Tgl Pinjam</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- LAPORAN -->
+        <div id="laporan" class="section">
+            <button class="btn btn-outline back-btn" onclick="showSection('menu')">← Kembali</button>
+            <div class="section-header">
+                <h2>📊 Laporan Ringkas</h2>
+            </div>
+            <div class="stats-grid" id="stats"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===================== DATA =====================
+    let data = {
+        users: [{ username: "admin", password: "plp123", nama: "Kepala Bengkel TI / PLP" }],
+        barang: [
+            { id: 1, kode: "BRG001", nama: "Obeng Set", stok: 15, satuan: "set" },
+            { id: 2, kode: "BRG002", nama: "Tang Kombinasi", stok: 20, satuan: "buah" },
+            { id: 3, kode: "BRG003", nama: "Multimeter Digital", stok: 8, satuan: "buah" },
+            { id: 4, kode: "BRG004", nama: "Solder Listrik", stok: 10, satuan: "buah" },
+            { id: 5, kode: "BRG005", nama: "Kabel LAN UTP", stok: 50, satuan: "meter" },
+            { id: 6, kode: "BRG006", nama: "Crimping Tool", stok: 6, satuan: "buah" },
+            { id: 7, kode: "BRG007", nama: "Laptop Praktikum", stok: 12, satuan: "unit" }
+        ],
+        peminjaman: [],
+        nextBarangId: 8,
+        nextPinjamId: 1
+    };
+
+    // Load dari localStorage
+    function loadData() {
+        const saved = localStorage.getItem("bengkel_ti_data");
+        if (saved) {
+            data = JSON.parse(saved);
+        }
+    }
+
+    function saveData() {
+        localStorage.setItem("bengkel_ti_data", JSON.stringify(data));
+    }
+
+    // ===================== AUTH =====================
+    function login() {
+        const user = document.getElementById("username").value.trim();
+        const pass = document.getElementById("password").value.trim();
+        const found = data.users.find(u => u.username === user && u.password === pass);
+
+        if (found) {
+            document.getElementById("login-page").style.display = "none";
+            document.getElementById("app").style.display = "block";
+            document.getElementById("user-display").textContent = found.nama;
+            document.getElementById("login-error").style.display = "none";
+            showSection("menu");
+        } else {
+            document.getElementById("login-error").style.display = "block";
+        }
+    }
+
+    function logout() {
+        document.getElementById("app").style.display = "none";
+        document.getElementById("login-page").style.display = "flex";
+        document.getElementById("password").value = "";
+    }
+
+    // ===================== NAVIGATION =====================
+    function showSection(id) {
+        document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+
+        if (id === "barang") renderBarang();
+        if (id === "update") populateSelect("update-id");
+        if (id === "pinjam") populateSelect("pinjam-id");
+        if (id === "kembali") renderPengembalian();
+        if (id === "aktif") renderAktif();
+        if (id === "laporan") renderLaporan();
+    }
+
+    // ===================== RENDER =====================
+    function renderBarang() {
+        const tbody = document.querySelector("#tabel-barang tbody");
+        tbody.innerHTML = data.barang.map(b => `
+            <tr>
+                <td>${b.id}</td>
+                <td><strong>${b.kode}</strong></td>
+                <td>${b.nama}</td>
+                <td><strong>${b.stok}</strong></td>
+                <td>${b.satuan}</td>
+            </tr>
+        `).join("");
+    }
+
+    function populateSelect(selectId) {
+        const select = document.getElementById(selectId);
+        select.innerHTML = data.barang.map(b => 
+            `<option value="${b.id}">${b.kode} - ${b.nama} (Stok: ${b.stok})</option>`
+        ).join("");
+    }
+
+    function renderPengembalian() {
+        const aktif = data.peminjaman.filter(p => p.status === "Dipinjam");
+        const tbody = document.querySelector("#tabel-kembali tbody");
+
+        if (aktif.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Tidak ada barang yang sedang dipinjam</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = aktif.map(p => {
+            const brg = data.barang.find(b => b.id === p.id_barang);
+            return `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${brg ? brg.nama : "-"}</td>
+                    <td>${p.nama_peminjam}</td>
+                    <td>${p.jumlah}</td>
+                    <td>${p.tgl_pinjam}</td>
+                    <td><button class="btn btn-success" style="padding:6px 12px; font-size:0.85rem;" onclick="kembalikan(${p.id})">Kembalikan</button></td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    function renderAktif() {
+        const aktif = data.peminjaman.filter(p => p.status === "Dipinjam");
+        const tbody = document.querySelector("#tabel-aktif tbody");
+
+        if (aktif.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Tidak ada peminjaman aktif</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = aktif.map(p => {
+            const brg = data.barang.find(b => b.id === p.id_barang);
+            return `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${brg ? brg.nama : "-"}</td>
+                    <td>${p.nama_peminjam}</td>
+                    <td>${p.jumlah}</td>
+                    <td>${p.tgl_pinjam}</td>
+                    <td>${p.keterangan || "-"}</td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    function renderLaporan() {
+        const totalJenis = data.barang.length;
+        const totalStok = data.barang.reduce((sum, b) => sum + b.stok, 0);
+        const aktif = data.peminjaman.filter(p => p.status === "Dipinjam").length;
+        const selesai = data.peminjaman.filter(p => p.status === "Dikembalikan").length;
+
+        document.getElementById("stats").innerHTML = `
+            <div class="stat-card">
+                <div class="value">${totalJenis}</div>
+                <div class="label">Jenis Barang</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">${totalStok}</div>
+                <div class="label">Total Stok</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">${aktif}</div>
+                <div class="label">Peminjaman Aktif</div>
+            </div>
+            <div class="stat-card">
+                <div class="value">${selesai}</div>
+                <div class="label">Peminjaman Selesai</div>
+            </div>
+        `;
+    }
+
+    // ===================== ACTIONS =====================
+    function tambahBarang() {
+        const kode = document.getElementById("kode").value.trim().toUpperCase();
+        const nama = document.getElementById("nama").value.trim();
+        const stok = parseInt(document.getElementById("stok").value);
+        const satuan = document.getElementById("satuan").value.trim() || "buah";
+
+        if (!kode || !nama || isNaN(stok) || stok < 0) {
+            alert("Lengkapi data dengan benar!");
+            return;
+        }
+
+        if (data.barang.some(b => b.kode === kode)) {
+            alert("Kode barang sudah ada!");
+            return;
+        }
+
+        data.barang.push({
+            id: data.nextBarangId++,
+            kode, nama, stok, satuan
+        });
+        saveData();
+        alert("Barang berhasil ditambahkan!");
+        document.getElementById("kode").value = "";
+        document.getElementById("nama").value = "";
+        document.getElementById("stok").value = "";
+        showSection("barang");
+    }
+
+    function updateStok() {
+        const id = parseInt(document.getElementById("update-id").value);
+        const stokBaru = parseInt(document.getElementById("stok-baru").value);
+
+        if (isNaN(stokBaru) || stokBaru < 0) {
+            alert("Stok harus angka ≥ 0");
+            return;
+        }
+
+        const brg = data.barang.find(b => b.id === id);
+        if (brg) {
+            brg.stok = stokBaru;
+            saveData();
+            alert("Stok berhasil diupdate!");
+            document.getElementById("stok-baru").value = "";
+            showSection("barang");
+        }
+    }
+
+    function pinjamBarang() {
+        const id = parseInt(document.getElementById("pinjam-id").value);
+        const jumlah = parseInt(document.getElementById("jumlah").value);
+        const namaPeminjam = document.getElementById("nama-peminjam").value.trim();
+        const ket = document.getElementById("keterangan").value.trim();
+
+        if (!namaPeminjam || isNaN(jumlah) || jumlah < 1) {
+            alert("Lengkapi data dengan benar!");
+            return;
+        }
+
+        const brg = data.barang.find(b => b.id === id);
+        if (!brg) return;
+
+        if (brg.stok < jumlah) {
+            alert(`Stok tidak cukup! Stok tersedia: ${brg.stok}`);
+            return;
+        }
+
+        const now = new Date();
+        const tgl = now.toLocaleString("id-ID", { 
+            year: "numeric", month: "2-digit", day: "2-digit",
+            hour: "2-digit", minute: "2-digit"
+        });
+
+        data.peminjaman.push({
+            id: data.nextPinjamId++,
+            id_barang: id,
+            nama_peminjam: namaPeminjam,
+            jumlah,
+            tgl_pinjam: tgl,
+            tgl_kembali: null,
+            status: "Dipinjam",
+            keterangan: ket
+        });
+
+        brg.stok -= jumlah;
+        saveData();
+        alert(`Peminjaman ${brg.nama} sebanyak ${jumlah} berhasil dicatat!`);
+        
+        document.getElementById("jumlah").value = "1";
+        document.getElementById("nama-peminjam").value = "";
+        document.getElementById("keterangan").value = "";
+        showSection("aktif");
+    }
+
+    function kembalikan(idPinjam) {
+        const pinjam = data.peminjaman.find(p => p.id === idPinjam && p.status === "Dipinjam");
+        if (!pinjam) return;
+
+        const brg = data.barang.find(b => b.id === pinjam.id_barang);
+        if (brg) brg.stok += pinjam.jumlah;
+
+        const now = new Date();
+        pinjam.tgl_kembali = now.toLocaleString("id-ID", { 
+            year: "numeric", month: "2-digit", day: "2-digit",
+            hour: "2-digit", minute: "2-digit"
+        });
+        pinjam.status = "Dikembalikan";
+
+        saveData();
+        alert("Barang berhasil dikembalikan dan stok diperbarui!");
+        renderPengembalian();
+    }
+
+    // ===================== INIT =====================
+    loadData();
+    document.getElementById("username").focus();
+</script>
+</body>
+</html>
